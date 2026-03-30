@@ -1,0 +1,40 @@
+name: Build CI Images
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # nightly at 04:00 UTC
+  push:
+    branches: [main]
+    paths:
+      - 'images/**'
+      - '.github/workflows/images.yml'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  rust-ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push rust-ci
+        uses: docker/build-push-action@v6
+        with:
+          context: images/rust-ci
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/wafflethief123/rust-ci:latest
+            ${{ env.REGISTRY }}/wafflethief123/rust-ci:${{ github.run_number }}
