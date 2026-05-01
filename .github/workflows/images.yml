@@ -35,6 +35,12 @@ jobs:
         with:
           context: images/rust-ci
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/wafflethief123/rust-ci:latest
-            ${{ env.REGISTRY }}/wafflethief123/rust-ci:${{ github.run_number }}
+          tags: ${{ env.REGISTRY }}/wafflethief123/rust-ci:latest
+
+      - name: Prune old untagged versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: rust-ci
+          package-type: container
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: true
