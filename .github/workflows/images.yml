@@ -35,7 +35,7 @@ jobs:
         with:
           context: images/rust-ci
           push: true
-          tags: ${{ env.REGISTRY }}/wafflethief123/rust-ci:latest
+          tags: ${{ env.REGISTRY }}/imjustafox/rust-ci:latest
 
       - name: Prune old untagged versions
         uses: actions/delete-package-versions@v5
